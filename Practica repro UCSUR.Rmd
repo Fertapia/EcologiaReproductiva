@@ -15,37 +15,51 @@ knitr::opts_chunk$set(tidy=TRUE, echo=TRUE, warning=FALSE, message=FALSE, dev='s
 ```
 <base target="_blank"/>
 
-# Pr·ctica: EcologÌa reproductiva de organismos acu·ticos
+# Pr√°ctica: Ecolog√≠a reproductiva de organismos acu√°ticos
 
 ## Objetivos:
 
-* Brindar un enfoque general de los mÈtodos de evaluaciÛn en ecologÌa reproductiva de organismos acu·ticos con un enfoque pr·ctico en pesquerÌas.
-* Modelar la curva de madurez sexual de dos poblaciones.
+* Brindar un enfoque general de los m√©todos de evaluaci√≥n en ecolog√≠a reproductiva de organismos acu√°ticos con un enfoque pr√°ctico en pesquer√≠as.
+* Modelar la curva de madurez sexual de una poblaci√≥n en dos momentos diferentes.
 
 ----------  
 
-La estrategia reproductiva de una especie es la asociaciÛn de rasgos fenotÌpicos que se definen en base a relaciones complejas con el medio ambiente y la historia evolutiva del individuo. Esta estrategia reproductiva forma parte de la historia de vida de la especie la misma que define la forma en que los organismos optimizan sus recursos para maximizar su supervivencia y la de su descendencia.
+La estrategia reproductiva de una especie es la asociaci√≥n de rasgos fenot√≠picos que se definen en base a relaciones complejas con el medio ambiente y la historia evolutiva del individuo. Esta estrategia reproductiva forma parte de la historia de vida de la especie la misma que define la forma en que los organismos optimizan sus recursos para maximizar su supervivencia y la de su descendencia.
 
-El estudio de la ecologÌa reproductiva de especie comprende el an·lisis de los que son llamados rasgos de historia de vida y como Èstos interact˙an, entre los m·s relevantes que definen la estrategia reprductiva est·n el tamaÒo del nacimiento, edad y tamaÒo de madurez, n˙mero, tamaÒo y sexo de la descendencia; el esfuerzo reproductivo, la tasa de supervivencia de la descendencia y los efectos maternales.
+El estudio de la ecolog√≠a reproductiva de especie comprende el an√°lisis de los que son llamados rasgos de historia de vida y como √©stos interact√∫an, entre los m√°s relevantes que definen la estrategia reprductiva est√°n el tama√±o del nacimiento, edad y tama√±o de madurez, n√∫mero, tama√±o y sexo de la descendencia; el esfuerzo reproductivo, la tasa de supervivencia de la descendencia y los efectos maternales.
 
-El c·lculo de la edad y/o tamaÒo en la que los organismos alcanzan la madurez es un par·metro importante en el manejo pesquero ya que es un factor a tomar en consideraciÛn para establecer la talla mÌnima de captura, bajo el enfoque de asegurar que el recurso se reproduzca al menos una vez antes de formar parte de la captura de este modo "asegurando" la sostenibilidad. 
+El c√°lculo de la edad y/o tama√±o en la que los organismos alcanzan la madurez es un par√°metro importante en el manejo pesquero ya que es un factor a tomar en consideraci√≥n para establecer la talla m√≠nima de captura, bajo el enfoque de asegurar que el recurso se reproduzca al menos una vez antes de formar parte de la captura de este modo ‚Äúasegurando‚Äù la sostenibilidad.
 
-Asimismo, los efectos maternales se dan cuando las caracterÌsticas fenotÌpicas de la hembra influyen directamente sobre el fenotipo de la descendencia, la forma m·s tÌpica de estos efectos maternales se da en relaciÛn a la fluctuaciones en el tamaÒo del huevo y el n˙mero de huevos producidos por el individuo. En tÈrminos generales, se espera que hembras m·s grandes produzcan huevos m·s grandes y un mayor n˙mero de estos, sin embargo, tambiÈn es posible observar "intercambios" entre el tamaÒo del huevo y el n˙mero de crÌas en orden como una forma de adaptaciÛn a las condiciones ambientales.
+Asimismo, los efectos maternales se dan cuando las caracter√≠sticas fenot√≠picas de la hembra influyen directamente sobre el fenotipo de la descendencia, la forma m√°s t√≠pica de estos efectos maternales se da en relaci√≥n a la fluctuaciones en el tama√±o del huevo y el n√∫mero de huevos producidos por el individuo. En t√©rminos generales, se espera que hembras m√°s grandes produzcan huevos m√°s grandes y un mayor n√∫mero de estos, sin embargo, tambi√©n es posible observar ‚Äúintercambios‚Äù entre el tama√±o del huevo y el n√∫mero de cr√≠as en orden como una forma de adaptaci√≥n a las condiciones ambientales.
+
 
 ## Paquetes requeridos
-Las funciones necesarias para la pr·ctica se encuentran en los siguientes paquetes:
+Las funciones necesarias para la pr√°ctica se encuentran en los siguientes paquetes:
+
+1. Instalar paquetes:
+
+```{r eval = FALSE, message=FALSE, cache=FALSE, results='hide'}
+Paquetes <- c("FSA", 
+              "tidyverse", 
+              "magrittr", 
+              "lubridate", 
+              "car")
+
+install.packages(Paquetes)
+```
+
+2. Extraer paquetes:
 
 ```{r cache=FALSE, results='hide', message=FALSE}
-library(FSA)
-library(magrittr)
-library(dplyr)
-library(lubridate)
-library(car)
-library(ggplot2)
+library("FSA")
+library("tidyverse")
+library("lubridate")
+library("magrittr")
+library("car")
 ```
 
 ## Base de datos empleada
-Las variables a analizar corresponden a longitud total (`longitud`; en cm), `edad` (aÒos), y `madurez` (`Inmaduro` y `Maduro`) de las hembras del pez piedra (Sebastes ruberimus) registrados en la base de datos `PracticaRepro.csv` ([Descargar]("https://raw.githubusercontent.com/Fertapia/EcologiaReproductiva/master/PracticaRepro.csv"))
+Las variables a analizar corresponden a longitud total (`longitud`; en cm), `edad` (a?os), y `madurez` (`Inmaduro` y `Maduro`) de las hembras del pez piedra (Sebastes ruberimus) registrados en la base de datos `PracticaRepro.csv` ([Descargar]("https://raw.githubusercontent.com/Fertapia/EcologiaReproductiva/master/PracticaRepro.csv"))
 
 ```{r echo=FALSE}
 ##############################################################
@@ -54,89 +68,130 @@ df <- read.csv("https://raw.githubusercontent.com/Fertapia/EcologiaReproductiva/
 ##############################################################
 ```
 
+* Paso 1: Fijar el directorio de trabajo, carpeta de su ordenador que contiene los datos descargados.
+
+```{r eval=FALSE}
+setwd("D:/Documentos/Clase_Repro")
+```
+
+* Paso 2: Extraer los datos
+
 ```{r eval=FALSE}
 df <- read.csv("PracticaRepro.csv")
 ```
+
+Alternativamente usar el siguiente c√≥digo (No recomendado, si la intenci√≥n es trabajar con datos propios):
+
+```{r eval=FALSE}
+df <- read.csv("https://raw.githubusercontent.com/Fertapia/EcologiaReproductiva/master/PracticaRepro.csv")
+```
 ```{r}
 str(df)
 ```
 
-Adicionalmente se ha registrado la fecha en la que los datos fueron registrados, la fecha de referencia es el aÒo 2002. A continuaciÛn, se transformar· la fecha en un factor de dos niveles: `Pre-2002` y `Post-2002` este ˙ltimo incluye aquellos individuos capturados en 2002.
+Adicionalmente se ha registrado la fecha en la que los datos fueron registrados, la fecha de referencia es el a?o 2002. A continuaci?n, se transformar? la fecha en un factor de dos niveles: `Pre-2002` y `Post-2002` este ?ltimo incluye aquellos individuos capturados en 2002.
 
 ```{r}
 headtail(df)
 ```
 
 ```{r}
-df %<>% mutate(Fecha=as.POSIXct(Fecha,format="%m/%d/%Y"))
+df <- df %>% 
+  mutate(Fecha = as.POSIXct(Fecha, format = "%m/%d/%Y"),
+         Madurez = as.factor(Madurez),
+         Sexo = as.factor(Sexo)) 
 str(df)
 headtail(df)
 ```
 
-Mediante el paquete `lubridate` extraemos el aÒo con `year()`, y la clasificamos en `Pre-2002` y `Post-2002` el cual es luego aÒadido a la base de datos como una variable `era`.
+Mediante el paquete `lubridate` extraemos el a?o con `year()`, y la clasificamos en `Pre-2002` y `Post-2002` el cual es luego a?adido a la base de datos como una variable `era`.
 
 ```{r}
-df %<>% mutate(year=year(Fecha),
-                 era=ifelse(year<2002,"Pre-2002","Post-2002"),
-                 era=factor(era,levels=c("Pre-2002","Post-2002")))
+df <- df %>% 
+  mutate(
+         year = year(Fecha), 
+         era = ifelse(year < 2002, "Pre-2002", "Post-2002"),
+         era = factor(era, levels = c("Pre-2002", "Post-2002"))
+        )
 str(df)
 headtail(df)
 ```
 
-Removemos, los valores perdidos `NA` presentes en la base de datos, estos se han registrado sÛlo en la variable `Madurez`.
+Removemos, los valores perdidos `NA` presentes en la base de datos, estos se han registrado s?lo en la variable `Madurez`.
 
 ```{r}
-df %<>% filterD(!is.na(Madurez))
+df <- df %>% filterD(!is.na(Madurez))
 ```
 
-## An·lisis exploratorio de la madurez
-Los datos de madurez son registrados como `Maduro` e `Inmaduro`, estos datos son comparados respecto de la `Longitud` o la `Edad`. Adem·s es posible comparar el comportamiento de la madurez respecto de la Època de muestreo (`Era`) o el `Sexo`.
+## An√°lisis exploratorio de la madurez
+Los datos de madurez son registrados como `Maduro` e `Inmaduro`, estos datos son comparados respecto de la `Longitud` o la `Edad`. Adem√°s es posible comparar el comportamiento de la madurez respecto de la √©poca de muestreo (`Era`) o el `Sexo`.
 
-Los datos de madurez deben ser resumidos en base a la proporciÛn de individuos maduros en cada categorÌa de edad o longitud. Estas categorÌas de longitud son intervalos de tamaÒo constante, el tamaÒo del invervalo es variable y debe tener suficientes individuos para calcular una proporciÛn confiable.
+Los datos de madurez deben ser resumidos en base a la proporci√≥n de individuos maduros en cada categor√≠a de edad o longitud. Estas categor√≠as de longitud son intervalos de tama√±o constante, el tama√±o del invervalo es variable y debe tener suficientes individuos para calcular una proporci√≥n confiable.
 
-Los datos presentados son clasificados en categorÌas de 2 cm lo cual asegura que en cada intervalo hay aproximadamente 10 peces o m·s, estas categorÌas son calculadas con `lencat`.
+Los datos presentados son clasificados en categor√≠as de 2 cm lo cual asegura que en cada intervalo hay aproximadamente 10 peces o m√°s, estas categor√≠as son calculadas con `lencat`.
 
 ```{r}
-df %<>% mutate(lcat2=lencat(Longitud, w=2))
+df <- df %>% 
+  mutate(lcat2=lencat(Longitud, w=2)) # el argumento w indica el ancho del intervalo en este caso es de 2 cm
+
 headtail(df)
 ```
 
-Calculamos la frecuencia de individuos maduros en cada categorÌa de longitud con `xtabs()`. Las frecuencias son calculadas con `prop.table`, y estas proporciones son graficadas.
+Calculamos la frecuencia de individuos maduros en cada categor?a de longitud con `xtabs()`. Las frecuencias son calculadas con `prop.table`, y estas proporciones son graficadas.
 
 ```{r par1=TRUE}
 freq <- xtabs(~lcat2+Madurez, data = df)
+
 freq
+
 props <- prop.table(freq, margin=1)
+
 round(props,3) #Redondea los resultados a 3 decimales
+
 props.df <- as.data.frame(props) 
+
 headtail(props.df)
-props.df %<>% filter(Madurez == "Maduro")
+
+props.df <- props.df %>% 
+  filter(Madurez == "Maduro")
+
 headtail(props.df)
+
 lcat1 <- as.numeric(levels(props.df$lcat2))
+
 props.df$lcat1 <- lcat1
+```
+
+## Graficamos la proporciones calculadas en intervalos de longitud de 2 cm:
+
+```{r par1=TRUE}
 ggplot(props.df, aes(x = lcat2, y=Freq)) +
   geom_point() +
-  labs(title = paste("ProporciÛn de individuos aclanzando la madurez"), x = "Longitud (cm)", y = "Frecuencia") +
+  labs(title = paste("Proporci?n de individuos aclanzando la madurez"), x = "Longitud (cm)", y = "Frecuencia") +
   theme_bw()
 ```
 
 ### Ejercicios:
-1. øCÛmo interpreta la figura resultante?
-2. øCÛmo cambia la figura cuando el intervalo de la categorÌa toma los valores de: `1 cm`, `2.5 cm`, `3 cm` y `4 cm`?
+1. ¬øC√≥mo interpreta la figura resultante?
+2. ¬øC√≥mo cambia la figura cuando el intervalo de la longitud toma los valores de: 1 cm, 3 cm y 4 cm?
+3. ¬øQu√© pasar√≠a si en lugar de Longitud consideramos la Edad?, Pista: el argumento w de la funci√≥n lencat ahora tiene que manejarse en a√±os.
 
 ## Modelando los datos
 
-### Ajuste del modelo de regresiÛn logÌstica
+### Ajuste del modelo de regresi√≥n log√≠stica
 
-Usaremos un modelo linear generalizado mediante ajustando una curva logÌstica, este modelo requiere de una variable de respuesta binomial (Maduro - Inmaduro), expresada como una variable cuantitativa. El objetivo es calcular la probabilidad de "Èxito" del individuo de alcanzar la madurez ($p$) definida entre 0 y 1; mientras que la variable explicatoria es la longitud o edad. La relaciÛn entre $p$ y la longitud generalmente no es linear.
+Usaremos un modelo linear generalizado mediante ajustando una curva log√≠stica, este modelo requiere de una variable de respuesta binomial (Maduro - Inmaduro), expresada como una variable cuantitativa. El objetivo es calcular la probabilidad de "√©xito" del individuo de alcanzar la madurez ($p$) definida entre 0 y 1; mientras que la variable explicatoria es la longitud o edad. La relaci√≥n entre $p$ y la longitud generalmente no es linear.
 
-En este sentido ajustamos una regresiÛn logÌstica con el comando `glm()`, la fÛrmula tine la forma: `factor~cuantitativa`, `data = "matriz que contiene las variables"`, `family = distribuciÛn a priori`:
+En este sentido ajustamos una  regresi√≥n log√≠stica con el comando `glm()`, la f?rmula tine la forma:
+`factor~cuantitativa`, `data = "matriz que contiene las variables"`, `family = distribuci√≥n a priori`:
 
 ```{r}
 glm1 <- glm(Madurez~Longitud, data = df, family = binomial)
 ```
 
-Luego extraemos los par·metros del modelo con `coef()`
+Nota: La variable categ√≥rica en este caso `Madurez` debe ser NECESARIAMENTE un factor en R, de no ser as√≠ transformar la variable a factor con la funci√≥n `as.factor`.
+
+Extraemos los par√°metros del modelo con `coef()`
 
 ```{r}
 coef(glm1)
@@ -144,41 +199,43 @@ coef(glm1)
 
 Calculamos los intervalos de confianza mediante bootstrap con el comando `bootCase` del paquete `car`.
 
-```{r}
+```{r results='hide', message=FALSE}
 bcL <- bootCase(glm1, B= 100)
 cbind(Ests = coef(glm1), confint(bcL))
 ```
 
-La pendiente estimada (0.4371) indica que con un incremento de 1 cm en la longitud del pez se incrementa por un 0.4371 la probabilidad de que el individuo haya alcanzado la madurez. Los intervalos de confianza al 95% superior (`UCI`) e inferior (`LCI`) indican entre quÈ valores se encuentran la pendiente y el intercepto del modelo.
+La pendiente estimada (0.4371) y el t√©rmino independiente son b√°sicos para el c√°lculo de la probabilidad en que un individuo al azar de la poblaci√≥n estudiada haya alcanzado la madurez. Los intervalos de confianza al 95% superior (`UCI`) e inferior (`LCI`) indican entre qu√© valores se encuentran la pendiente y el intercepto del modelo.
 
-### Calculamos la probabilidad de que el individuo estÈ maduro
-A continuaciÛn calculamos la probabilidad de que un individuo de `Longitud` o `edad` conocida haya alcanzado la madurez. Esta predicciÛn se realiza mediante el comando `predict()`, este requiere el modelo `glm1`, un data frame con los valores e la variable explicatoria para la cual deseams realizar la predicciÛn como segundo argumento y `type = "response"` fuerza el c·lculo de la probabilidad de estar maduro. 
+### Calculamos la probabilidad de que el individuo est√© maduro
+A continuaci√≥n calculamos la probabilidad de que un individuo de `Longitud` o `edad` conocida haya alcanzado la madurez. Esta predicci?n se realiza mediante el comando `predict()`, este requiere el modelo `glm1`, un data frame con los valores e la variable explicatoria para la cual deseams realizar la predicci?n como segundo argumento y `type = "response"` fuerza el c√°lculo de la probabilidad de estar maduro. 
 
 ```{r}
 predict(glm1, data.frame(Longitud = c(32,42)), type = "response")
 ```
 
-Los resultados obtenidos indican que la probabilidad de que un individuo de 32 cm haya alcanzado la madurez es de 0.04 Û 4%, mientras que un individuo de 42 cm tendrÌa una probabilidad de 0.80 Û 80%. A continuaciÛn calculamos los intervalos de fonfianza para estas predicciones. Para ello creamos una funciÛn que calcula los intervalos de confianza para cada una de las muestras del procedimiento bootstrap.
+Los resultados obtenidos indican que la probabilidad de que un individuo de 32 cm haya alcanzado la madurez es de 0.04 o 4%, mientras que un individuo de 42 cm tendr√≠a una probabilidad de 0.80 o 80%. A continuaci√≥n, calculamos los intervalos de fonfianza para estas predicciones. Para ello creamos una funci?n que calcula los intervalos de confianza para cada una de las muestras del procedimiento bootstrap.
 
 ```{r}
-predP <- function(cf,x) exp(cf[1] + cf[2]*x)/(1+exp(cf[1] + cf[2]*x))
-p32 <- apply(bcL, 1, predP, x=32)
+predP <- function(cf, x) exp(cf[1] + cf[2] * x) / (1 + exp(cf[1] + cf[2] * x))
+p32 <- apply(bcL, 1, predP, x = 32)
 quantile(p32,c(0.025, 0.975))
 ```
 
-Entonces la probabilidad de que un individuo de 32 cm alcance la madurez est· entre 0.001 y 0.138.
+Entonces la probabilidad de que un individuo de 32 cm alcance la madurez est? entre 0.001 y 0.138.
 
 ### Ejercicios
-1. øQuÈ sucede con los intervalos de confianza si en lugar de 100 repeticiones empleamos, 10, 50, 500, y 1000 repeticiones?
+1. ¬øCu√°l es el significado de la funci√≥n `bootCase` qu√© pasa si toma un valor de 1000?. Pista: Revisar la documentaci√≥n de la funci√≥n en `https://www.rdocumentation.org/packages/car/versions/2.1-6/topics/bootCase` para obtener m√°s informaci√≥n de esta.
 
-2. øCu·l es la probabilidad de que un individuo de 12 cm y otro de 65 cm hayan alcanzado la madurez? Calcular sus intervalos de confianza.
+2. ¬øCu√°l es la probabilidad de que un individuo de 12 cm y otro de 65 cm hayan alcanzado la madurez? Calcular sus intervalos de confianza.
 
-3. øPorquÈ el tipo de distribuciÛn asumido es de tipo binomial?
+3. ¬øPorqu√© el tipo de distribuci√≥n asumida es de tipo binomial?
 
-## Resumen gr·fico
-Mediante una figura ilustramos el ajuste de la regresiÛn calculada en los pasos anteriores. Primero que nada recordar la variable `Madurez` corresponde a un factor por lo que debe ser transformada a una variable numÈrica de valores 0 (`Inmaduro`) y 1 (`Maduro`), notar que se le extrae el valor de 1 ya que al transformarlos a numÈricos los valores que toman son de 1 y 2.
+## Resumen gr√°fico
+Mediante una figura ilustramos el ajuste de la regresi√≥n calculada en los pasos anteriores. Primero que nada recordar la variable `Madurez` corresponde a un factor por lo que debe ser transformada a una variable num√©rica de valores 0 (`Inmaduro`) y 1 (`Maduro`), notar que se le extrae el valor de 1 ya que al transformarlos a num√©ricos los valores que toman son de 1 y 2.
 
-El paquete `ggplot2` no contiene la opciÛn de ajustar curvas binomiales por defecto, sin embargo es posible crear una funciÛn que le indique el tipo de modelo y distribuciÛn empleados.
+El paquete `ggplot2` no contiene la opci√≥n de ajustar curvas binomiales por defecto, sin embargo es posible crear una funci√≥n que le indique el tipo de modelo y distribuci√≥n empleados.
+
+La funci√≥n `binomial_smooth` permite ajustar la curva de forma log√≠stica en ggplot.
 
 ```{r}
 binomial_smooth <- function(...) {
@@ -195,15 +252,15 @@ ggplot(df, aes(Longitud, as.numeric(Madurez)-1)) +
   theme_bw()
 ```
 
-## Longitud - o edad - de primera madurez
+## Longitud de primera madurez
 
-La longitud y/o la edad de primera madurez es una medida empleada como referencia en el manejo pesquero, est· definida como la longitud o edad en la cual la probabilidad de ser maduro es del 50%. Otro valor usualmente calculado es al 90%. Estos c·lculos son realizados mediante la funciÛn:
+La longitud y/o la edad de primera madurez es una medida empleada como referencia en el manejo pesquero, est√° definida como la longitud o edad en la cual la probabilidad de ser maduro es del 50%. Otro valor usualmente calculado es al 90%. Estos c√°lculos son realizados mediante la funci√≥n:
 
 ```{r}
 lrPerc <- function(cf,p) (log(p/(1-p))-cf[[1]])/cf[[2]]
 ```
 
-La funciÛn toma los coeficientes de `glm()` como pirmer argumento y la probabilidad ($p$) como segundo argumento. Calculamos la longitud de madurez al 50% y al 90%.
+La funci√≥n toma los coeficientes de `glm()` como pirmer argumento y la probabilidad ($p$) como segundo argumento. Calculamos la longitud de madurez al 50% y al 90%.
 
 ```{r}
 (L50 <- lrPerc(coef(glm1), 0.5))
@@ -236,52 +293,53 @@ ggplot(df, aes(Longitud, as.numeric(Madurez)-1)) +
 ```
 
 ### Ejercicios
-1. øPorquÈ la talla de primera madurez es la longitud en la que $p$ es 0.5?
-2. Calcular la edad de primera madurez
-
-      2.1 øCu·l serÌa el tamaÒo de intervalo de edad adecuado?
-       
-      2.2 øVarÌa la curva de edad de primera madurez respecto de la curva basada en la longitud?
+1. ¬øPorqu√© la talla de primera madurez es la longitud en la que $p$ es 0.5?
+2. Calcular la edad de primera madurez. ¬øEs distinta de la curva basada en la longitud?.
+3. Si tuviera que elegir entre la Talla de primera madurez y la Edad de primera madurez para proponer medidas de manejo pesquero para la conservaci√≥n de este recurso ¬øcu√°l escoger√≠a?. Justifique su respuesta (M√°ximo 200 palabras).
 
 ## Comparando las tallas de madurez entre grupos
 
 ### Ajustando el modelo
-Seg˙n el tipo de estudio puede ser importante definir si existen diferencias entre los valores de longitud de madurez entre Èpocas, sexos, especies, etc. Para ello se puede determinar si los par·metros de la regresiÛn logÌstica difieren significativamente entre las situaciones. En el presente ejercicio compara dos periodos de manejo pesquero distitntos: `Pre-2002` y `Post-2002`. 
+Seg√∫n el tipo de estudio puede ser importante definir si existen diferencias entre los valores de longitud de madurez entre √©pocas, sexos, especies, etc. Para ello se puede determinar si los par√°metros de la regresi√≥n log√≠stica difieren significativamente entre las situaciones. 
+
+En el presente ejercicio compara dos periodos de manejo pesquero distitntos: `Pre-2002` y `Post-2002` (variable `era`), eval√∫a la influencia de estas dos variables sobre los datos y si calcula una curva de madurez para cada periodo.
+
+Nota: La variable categ√≥rica que separa los grupos de an√°lisis debe ser un factor NECESARIAMENTE. De no ser as√≠, transformar la variable con el argumento `as.factor()`.
 
 ```{r}
 glm2 <- glm(Madurez~Longitud*era, data = df, family = binomial)
 ```
 
-La variante est·n en `Longitud*era` esto le indica al modelo que existe un factor que identifica a los grupos que nos interesa comparar `era`.
+La variante est√° en `Longitud*era` esto le indica al modelo que existe un factor que identifica a los grupos que nos interesa comparar `era`.
 
-La significancia de las diferencias entre ambas Èpocas son calculadas mediante el comando `Anova` del paquete `car`
+La significancia de las diferencias entre ambas ?pocas son calculadas mediante el comando `Anova` del paquete `car`
 
 ```{r}
 Anova(glm2)
 ```
 
-El An·lisis de desviaciÛn se interpreta de abajo hacia arriba:
+El An√°lisis de desviaci√≥n se interpreta de abajo hacia arriba:
 
-+ `Longitud:era` es el tÈrmino de interacciÛn, en este caso no es significativa.
++ `Longitud:era` es el t√©rmino de interacci√≥n, en este caso no es significativa.
 
 + `era` tampoco es significante sugiere que los interceptos no difieren entre ambas eras
 
 + `Longitud` presenta diferencias signficativas a nivel de longitudes.
 
 ### Comparando Longitudes de madurez
-Primeramente examinamos los par·metros del modelo de regresiÛn
+Primeramente examinamos los par√°metros del modelo de regresi√≥n
 
 ```{r}
 coef(glm2)
 ```
 
-Notar que `Intercept` y `Longitud` son los par·metros del grupo de referencia (Pre-2002) y los dos par·metros siguientes corresponden al intercepto y pendiente de Post-2002. El orden es alfabÈtico y puede obtenerse con el siguiente comando.
+Notar que `Intercept` y `Longitud` son los par√°metros del grupo de referencia (Pre-2002) y los dos par√°metros siguientes corresponden al intercepto y pendiente de Post-2002. El orden es alfab?tico y puede obtenerse con el siguiente comando.
 
 ```{r}
 levels(df$era)
 ```
 
-A fin de calcular los intervalos de confianza para los par·metros construimos muestras bootstrap a partir del `glm()`.
+A fin de calcular los intervalos de confianza para los par?metros construimos muestras bootstrap a partir del `glm()`.
 
 ```{r}
 bcL2 <- bootCase(glm2, B=1000)
@@ -297,7 +355,7 @@ L50.post=apply(bcL2[,1:2]+bcL2[,3:4],1,lrPerc,p=0.5)
 L50.post.m <- mean(L50.post)
 ```
 
-Si no hay diferencia entre las L50 entre eras, uno podrÌa esperar que los promedios de estos grupos sean equivalentes o parecidos
+Si no hay diferencia entre las L50 entre eras, uno podr√≠a esperar que los promedios de estos grupos sean equivalentes o parecidos
 
 ```{r}
 L50.diff <- L50.pre - L50.post
@@ -323,14 +381,15 @@ Resumen de los resultados
 (L50.post.Fin <- c(L50.post.m, ci.L50.post))
 ```
 
-### Resumen gr·fico
+### Resumen gr√°fico
 Finalmente graficamos las curvas de madurez para ambos periodos:
 
 ```{r}
 ggplot(df, aes(Longitud, as.numeric(Madurez)-1, color=era)) + 
   binomial_smooth() +
   geom_point(position=position_jitter(height=0.03, width=0)) +
-  xlab("Longitud (cm)") + ylab("Probabilidad de individuo maduro") +
+  xlab("Longitud (cm)") + 
+  ylab("Probabilidad de individuo maduro") +
   theme_bw()
 ```
 
@@ -340,8 +399,8 @@ ggplot(df, aes(Longitud, as.numeric(Madurez)-1, color=era)) +
 
 2. Calcular si existen diferencias entre la longitud de madurez entre sexos.
 
-3. Seg˙n su criterio, a quÈ se deberÌan las diferencias observadas durante el ejercicio, si la longitud de madurez se incrementara øCu·l serÌa su significado evolutivo?
+3. Seg√∫n su criterio, a qu√© se deber√≠an los resultados observados durante el ejercicio (entre eras Pre-2002 y Post-2002), si la longitud de madurez se incrementara fuera diferente entre estos periodos. ¬øCu√°l ser√≠a su significado evolutivo?. Justifique su respuesta (M√°ximo 200 palabras).
 
 ---------------------------
 
-[Fernando Tapia - Laboratorio de rerpoducciÛn y BiologÌa del Desarrollo UNMSM](https://github.com/Fertapia/EcologiaReproductiva) . 18 de Noviembre del 2018. ⁄ltima actualizaciÛn: `r Sys.Date()`
+[Fernando Tapia - Laboratorio de rerpoducci√≥n y Biolog√≠a del Desarrollo UNMSM](https://github.com/Fertapia/EcologiaReproductiva) . 18 de Noviembre del 2018. √öltima actualizaci√≥n: `r Sys.Date()`
